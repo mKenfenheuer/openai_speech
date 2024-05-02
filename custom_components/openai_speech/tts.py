@@ -2,6 +2,7 @@
 Setting up TTS entity.
 """
 
+import re
 import logging
 from homeassistant.components.tts import TextToSpeechEntity
 from homeassistant.config_entries import ConfigEntry
@@ -45,12 +46,18 @@ class OpenAITTSEntity(TextToSpeechEntity):
     _attr_has_entity_name = True
     _attr_should_poll = False
 
+    def generate_entity_id(self, line: str):
+        return re.sub(r"[^a-zA-Z0-9]+", "_", line).lower()
+
     def __init__(self, hass, config, engine):
         """Initialize TTS entity."""
         self.hass = hass
         self._engine = engine
         self._config = config
         self._attr_name = (
+            f"{self._config.data.get(CONF_NAME, NAME)} Text-to-Speech Service"
+        )
+        self._attr_unique_id = self.generate_entity_id(
             f"{self._config.data.get(CONF_NAME, NAME)} Text-to-Speech Service"
         )
 
@@ -67,7 +74,9 @@ class OpenAITTSEntity(TextToSpeechEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {self._config.data.get(CONF_NAME, NAME)},
+            "identifiers": {
+                self.generate_entity_id(self._config.data.get(CONF_NAME, NAME))
+            },
             "name": f"{self._config.data.get(CONF_NAME, NAME)} Speech Services",
             "manufacturer": "OpenAI",
         }

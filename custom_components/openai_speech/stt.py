@@ -2,6 +2,7 @@
 Support for Whisper API STT.
 """
 
+import re
 from typing import AsyncIterable
 import aiohttp
 import os
@@ -66,6 +67,9 @@ async def async_setup_entry(
 class OpenAISTTProvider(SpeechToTextEntity):
     """The Whisper API STT provider."""
 
+    def generate_entity_id(self, line: str):
+        return re.sub(r"[^a-zA-Z0-9]+", "_", line).lower()
+
     def __init__(self, hass, api_key, lang, model, url, prompt, temperature, name):
         """Initialize Whisper API STT provider."""
         self.hass = hass
@@ -77,11 +81,14 @@ class OpenAISTTProvider(SpeechToTextEntity):
         self._temperature = temperature
         self._name = name
         self._attr_name = f"{self._name} Speech-to-Text Service"
+        self._attr_unique_id = self.generate_entity_id(
+            f"{self._name} Speech-to-Text Service"
+        )
 
     @property
     def device_info(self):
         return {
-            "identifiers": {self._name},
+            "identifiers": {self.generate_entity_id(self._name)},
             "name": f"{self._name} Speech Services",
             "manufacturer": "OpenAI",
         }

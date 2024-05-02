@@ -82,7 +82,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
             ),
         }
 
-    def generate_schema(self, config_entry: ConfigEntry):
+    def generate_schema_config(self, config_entry: ConfigEntry):
         """Geneate Schema."""
 
         data_schema = {
@@ -161,7 +161,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
         config = self.hass.config_entries.async_get_entry(self.context["entry_id"])
 
-        data_schema = self.generate_schema(config)
+        data_schema = self.generate_schema_config(config)
 
         errors = {}
 
@@ -194,7 +194,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                     {CONF_TTS_VOICE: user_input[CONF_TTS_VOICE]}
                 )
                 return self.async_create_entry(
-                    id="openai_speech", title="OpenAI Speech", data=user_input
+                    title=user_input.get(CONF_NAME, NAME), data=user_input
                 )
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unknown exception.")

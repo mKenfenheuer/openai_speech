@@ -3,8 +3,26 @@
         "error": {
             "wrong_api_key": "Connection was not authorized. Wrong or no API key provided."
         },
+        "abort": {
+          "reconfigure_successful": "Re-configuration was successful"
+        },
         "step": {
             "user": {
+                "data": {
+                    "api_key": "Enter OpenAI API key.",
+                    "base_url": "Enter Base Url of OpenAI API Endpoint",
+                    "stt_default_lang": "Select default language to be used for speech to text",
+                    "stt_model": "Select model to be used for speech to text",
+                    "stt_prompt": "Select prompt to be used for speech to text",
+                    "stt_temperature": "Select temperature to be used for speech to text",
+                    "tts_model": "Select model to be used for text to speech",
+                    "tts_speed": "Enter speed of the speech",
+                    "tts_voice": "Select voice for text to speech"
+                },
+                "description": "Provide configuration data. See documentation for further info.",
+                "title": "Add OpenAI speech services"
+            },
+            "reconfigure": {
                 "data": {
                     "api_key": "Enter OpenAI API key.",
                     "base_url": "Enter Base Url of OpenAI API Endpoint",

@@ -61,14 +61,12 @@ class OpenAITTSEntity(TextToSpeechEntity):
         )
 
     @property
-    def default_language(self):
-        """Return the default language."""
-        return "en"
+    def name(self):
+        return self._attr_name
 
     @property
-    def supported_languages(self):
-        """Return the list of supported languages."""
-        return self._engine.get_supported_langs()
+    def unique_id(self):
+        return self._attr_unique_id
 
     @property
     def device_info(self):
@@ -77,6 +75,16 @@ class OpenAITTSEntity(TextToSpeechEntity):
             "name": f"{self._name} Services",
             "manufacturer": "OpenAI",
         }
+
+    @property
+    def default_language(self):
+        """Return the default language."""
+        return "en"
+
+    @property
+    def supported_languages(self):
+        """Return the list of supported languages."""
+        return self._engine.get_supported_langs()
 
     def get_tts_audio(self, message, language, options=None):
         """Convert a given text to speech and return it as bytes."""

@@ -81,10 +81,18 @@ class OpenAISTTProvider(SpeechToTextEntity):
         self._prompt = prompt
         self._temperature = temperature
         self._name = name
-        self._attr_name = f"{self._name} Speech-to-Text Service"
+        self._attr_name = f"{self._name} Text-to-Speech Service"
         self._attr_unique_id = self.generate_entity_id(
-            f"{self._name} Speech-to-Text Service"
+            f"{self._name} Text-to-Speech Service"
         )
+
+    @property
+    def name(self):
+        return self._attr_name
+
+    @property
+    def unique_id(self):
+        return self._attr_unique_id
 
     @property
     def device_info(self):

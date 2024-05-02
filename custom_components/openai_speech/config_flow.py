@@ -60,7 +60,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                     options=TTS_MODELS,
                     mode=SelectSelectorMode.DROPDOWN,
                     sort=True,
-                    custom_value=False,
+                    custom_value=True,
                 )
             ),
             vol.Required(CONF_TTS_VOICE, default=TTS_VOICES[0]): SelectSelector(
@@ -68,7 +68,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                     options=TTS_VOICES,
                     mode=SelectSelectorMode.DROPDOWN,
                     sort=True,
-                    custom_value=False,
+                    custom_value=True,
                 )
             ),
             vol.Required(CONF_STT_DEFAULT_LANG, default=STT_DEFAULT_LANG): str,
@@ -102,7 +102,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                     options=TTS_MODELS,
                     mode=SelectSelectorMode.DROPDOWN,
                     sort=True,
-                    custom_value=False,
+                    custom_value=True,
                 )
             ),
             vol.Required(
@@ -115,7 +115,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                     options=TTS_VOICES,
                     mode=SelectSelectorMode.DROPDOWN,
                     sort=True,
-                    custom_value=False,
+                    custom_value=True,
                 )
             ),
             vol.Required(

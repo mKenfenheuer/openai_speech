@@ -42,12 +42,6 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-async def validate_input(user_input: dict):
-    """Function to validate provided data."""
-    if len(user_input[CONF_API_KEY]) != 56 and len(user_input[CONF_API_KEY]) != 51:
-        raise WrongAPIKey
-
-
 class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow ."""
 
@@ -167,15 +161,11 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                await validate_input(user_input)
                 self.hass.config_entries.async_update_entry(
                     entry=config, data=user_input
                 )
                 await self.hass.config_entries.async_reload(config.entry_id)
                 return self.async_abort(reason="reconfigure_successful")
-            except WrongAPIKey:
-                _LOGGER.exception("Wrong or no API key provided.")
-                errors[CONF_API_KEY] = "wrong_api_key"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unknown exception.")
                 errors["base"] = "Unknown exception."
@@ -197,13 +187,9 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._async_abort_entries_match(
                     {CONF_TTS_VOICE: user_input[CONF_TTS_VOICE]}
                 )
-                await validate_input(user_input)
                 return self.async_create_entry(
                     id="openai_speech", title="OpenAI Speech", data=user_input
                 )
-            except WrongAPIKey:
-                _LOGGER.exception("Wrong or no API key provided.")
-                errors[CONF_API_KEY] = "wrong_api_key"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unknown exception.")
                 errors["base"] = "Unknown exception."

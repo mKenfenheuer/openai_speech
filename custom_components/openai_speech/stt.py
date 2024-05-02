@@ -17,7 +17,7 @@ from homeassistant.components.stt import (
     AudioCodecs,
     AudioFormats,
     AudioSampleRates,
-    Provider,
+    SpeechToTextEntity,
     SpeechMetadata,
     SpeechResult,
     SpeechResultState,
@@ -35,8 +35,10 @@ from .const import (
     CONF_STT_DEFAULT_LANG,
     CONF_STT_TEMPERATURE,
     CONF_STT_PROMPT,
-    CONF_LANG,
     CONF_BASE_URL,
+    STT_MODEL,
+    STT_DEFAULT_LANG,
+    URL,
 )
 
 
@@ -48,16 +50,17 @@ async def async_setup_entry(
     """Set up OpenAI Text-to-speech platform via config entry."""
     engine = OpenAISTTProvider(
         hass,
-        config_entry.data[CONF_API_KEY],
-        config_entry.data[CONF_LANG],
-        config_entry.data[CONF_STT_MODEL],
-        config_entry.data[CONF_STT_PROMPT],
-        config_entry.data[CONF_STT_TEMPERATURE],
+        config_entry.data.get(CONF_API_KEY),
+        config_entry.data.get(CONF_STT_DEFAULT_LANG, STT_DEFAULT_LANG),
+        config_entry.data.get(CONF_STT_MODEL, STT_MODEL),
+        config_entry.data.get(CONF_BASE_URL, URL),
+        config_entry.data.get(CONF_STT_PROMPT, None),
+        config_entry.data.get(CONF_STT_TEMPERATURE, 0),
     )
     async_add_entities([engine])
 
 
-class OpenAISTTProvider(Provider):
+class OpenAISTTProvider(SpeechToTextEntity):
     """The Whisper API STT provider."""
 
     def __init__(self, hass, api_key, lang, model, url, prompt, temperature):
@@ -69,6 +72,8 @@ class OpenAISTTProvider(Provider):
         self._url = url
         self._prompt = prompt
         self._temperature = temperature
+        self._attr_name = "Open AI Speech To Text"
+        self._attr_unique_id = f"openai-stt"
 
     @property
     def default_language(self) -> str:
@@ -124,7 +129,9 @@ class OpenAISTTProvider(Provider):
                     wav_file.writeframes(data)
                 temp_file_path = temp_file.name
 
-            url = self._url or OPENAI_STT_URL
+            url = self._url or URL
+
+            url = url + "/audio/transcriptions"
 
             headers = {
                 "Authorization": f"Bearer {self._api_key}",

@@ -75,16 +75,14 @@ class OpenAITTSEntity(TextToSpeechEntity):
     def device_info(self):
         return {
             "identifiers": {
-                self.generate_entity_id(self._config.data.get(CONF_NAME, NAME))
+                (
+                    DOMAIN,
+                    self.generate_entity_id(self._config.data.get(CONF_NAME, NAME)),
+                )
             },
-            "name": f"{self._config.data.get(CONF_NAME, NAME)} Speech Services",
+            "name": f"{self._config.data.get(CONF_NAME, NAME)} Services",
             "manufacturer": "OpenAI",
         }
-
-    @property
-    def name(self):
-        """Return name of entity"""
-        return " engine"
 
     def get_tts_audio(self, message, language, options=None):
         """Convert a given text to speech and return it as bytes."""

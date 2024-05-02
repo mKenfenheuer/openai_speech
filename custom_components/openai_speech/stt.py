@@ -38,6 +38,7 @@ from .const import (
     CONF_STT_TEMPERATURE,
     CONF_STT_PROMPT,
     CONF_BASE_URL,
+    DOMAIN,
     NAME,
     STT_MODEL,
     STT_DEFAULT_LANG,
@@ -88,8 +89,8 @@ class OpenAISTTProvider(SpeechToTextEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {self.generate_entity_id(self._name)},
-            "name": f"{self._name} Speech Services",
+            "identifiers": {(DOMAIN, self.generate_entity_id(self._name))},
+            "name": f"{self._name} Services",
             "manufacturer": "OpenAI",
         }
 

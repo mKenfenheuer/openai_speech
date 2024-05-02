@@ -54,11 +54,10 @@ class OpenAITTSEntity(TextToSpeechEntity):
         self.hass = hass
         self._engine = engine
         self._config = config
-        self._attr_name = (
-            f"{self._config.data.get(CONF_NAME, NAME)} Text-to-Speech Service"
-        )
+        self._name = self._config.data.get(CONF_NAME, NAME)
+        self._attr_name = f"{self._name} Text-to-Speech Service"
         self._attr_unique_id = self.generate_entity_id(
-            f"{self._config.data.get(CONF_NAME, NAME)} Text-to-Speech Service"
+            f"{self._name} Text-to-Speech Service"
         )
 
     @property
@@ -74,13 +73,8 @@ class OpenAITTSEntity(TextToSpeechEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {
-                (
-                    DOMAIN,
-                    self.generate_entity_id(self._config.data.get(CONF_NAME, NAME)),
-                )
-            },
-            "name": f"{self._config.data.get(CONF_NAME, NAME)} Services",
+            "identifiers": {(DOMAIN, self.generate_entity_id(self._name))},
+            "name": f"{self._name} Services",
             "manufacturer": "OpenAI",
         }
 

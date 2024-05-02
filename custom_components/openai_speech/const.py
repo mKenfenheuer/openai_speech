@@ -1,6 +1,8 @@
 """Constants for OpenAI TTS custom component"""
 
 DOMAIN = "openai_speech"
+CONF_NAME = "name"
+NAME = "Open AI Speech"
 CONF_BASE_URL = "base_url"
 CONF_API_KEY = "api_key"
 CONF_TTS_MODEL = "tts_model"

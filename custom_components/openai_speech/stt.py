@@ -31,11 +31,13 @@ import io
 
 from .const import (
     CONF_API_KEY,
+    CONF_NAME,
     CONF_STT_MODEL,
     CONF_STT_DEFAULT_LANG,
     CONF_STT_TEMPERATURE,
     CONF_STT_PROMPT,
     CONF_BASE_URL,
+    NAME,
     STT_MODEL,
     STT_DEFAULT_LANG,
     URL,
@@ -56,6 +58,7 @@ async def async_setup_entry(
         config_entry.data.get(CONF_BASE_URL, URL),
         config_entry.data.get(CONF_STT_PROMPT, None),
         config_entry.data.get(CONF_STT_TEMPERATURE, 0),
+        config_entry.data.get(CONF_NAME, NAME),
     )
     async_add_entities([engine])
 
@@ -63,7 +66,7 @@ async def async_setup_entry(
 class OpenAISTTProvider(SpeechToTextEntity):
     """The Whisper API STT provider."""
 
-    def __init__(self, hass, api_key, lang, model, url, prompt, temperature):
+    def __init__(self, hass, api_key, lang, model, url, prompt, temperature, name):
         """Initialize Whisper API STT provider."""
         self.hass = hass
         self._api_key = api_key
@@ -72,8 +75,16 @@ class OpenAISTTProvider(SpeechToTextEntity):
         self._url = url
         self._prompt = prompt
         self._temperature = temperature
-        self._attr_name = "Open AI Speech To Text"
-        self._attr_unique_id = f"openai-stt"
+        self._name = name
+        self._attr_name = f"{self._name} Speech-to-Text Service"
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {self._name},
+            "name": f"{self._name} Speech Services",
+            "manufacturer": "OpenAI",
+        }
 
     @property
     def default_language(self) -> str:

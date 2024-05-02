@@ -20,6 +20,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.typing import UNDEFINED
 
 from .const import (
+    CONF_NAME,
+    NAME,
     CONF_BASE_URL,
     CONF_API_KEY,
     CONF_TTS_MODEL,
@@ -50,6 +52,7 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
     def generate_schema(self):
         """Geneate Schema."""
         return {
+            vol.Required(CONF_NAME, default=NAME): str,
             vol.Required(CONF_BASE_URL, default=URL): str,
             vol.Required(CONF_API_KEY): str,
             vol.Optional(CONF_TTS_SPEED, default=TTS_SPEED): vol.All(
@@ -83,6 +86,9 @@ class OpenAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
         """Geneate Schema."""
 
         data_schema = {
+            vol.Required(
+                CONF_NAME, default=config_entry.data.get(CONF_NAME, NAME)
+            ): str,
             vol.Required(
                 CONF_BASE_URL, default=config_entry.data.get(CONF_BASE_URL, URL)
             ): str,

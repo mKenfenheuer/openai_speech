@@ -9,11 +9,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import (
     CONF_API_KEY,
+    CONF_NAME,
     CONF_TTS_MODEL,
     CONF_TTS_SPEED,
     CONF_TTS_VOICE,
     DOMAIN,
     CONF_BASE_URL,
+    NAME,
 )
 from .openaitts_engine import OpenAITTSEngine
 from homeassistant.exceptions import MaxLengthExceeded
@@ -48,7 +50,9 @@ class OpenAITTSEntity(TextToSpeechEntity):
         self.hass = hass
         self._engine = engine
         self._config = config
-        self._attr_unique_id = self._config.data[CONF_TTS_VOICE]
+        self._attr_name = (
+            f"{self._config.data.get(CONF_NAME, NAME)} Text-to-Speech Service"
+        )
 
     @property
     def default_language(self):
@@ -63,8 +67,8 @@ class OpenAITTSEntity(TextToSpeechEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self._attr_unique_id)},
-            "name": f"OpenAI {self._config.data[CONF_TTS_VOICE]}",
+            "identifiers": {self._config.data.get(CONF_NAME, NAME)},
+            "name": f"{self._config.data.get(CONF_NAME, NAME)} Speech Services",
             "manufacturer": "OpenAI",
         }
 

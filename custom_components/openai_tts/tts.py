@@ -1,12 +1,20 @@
 """
 Setting up TTS entity.
 """
+
 import logging
 from homeassistant.components.tts import TextToSpeechEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import CONF_API_KEY,CONF_MODEL, CONF_SPEED, CONF_VOICE, DOMAIN
+from .const import (
+    CONF_API_KEY,
+    CONF_TTS_MODEL,
+    CONF_TTS_SPEED,
+    CONF_TTS_VOICE,
+    DOMAIN,
+    CONF_BASE_URL,
+)
 from .openaitts_engine import OpenAITTSEngine
 from homeassistant.exceptions import MaxLengthExceeded
 
@@ -21,15 +29,16 @@ async def async_setup_entry(
     """Set up OpenAI Text-to-speech platform via config entry."""
     engine = OpenAITTSEngine(
         config_entry.data[CONF_API_KEY],
-        config_entry.data[CONF_VOICE],
-        config_entry.data[CONF_MODEL],
-        config_entry.data[CONF_SPEED],
+        config_entry.data[CONF_TTS_VOICE],
+        config_entry.data[CONF_TTS_MODEL],
+        config_entry.data[CONF_TTS_SPEED],
     )
     async_add_entities([OpenAITTSEntity(hass, config_entry, engine)])
 
 
 class OpenAITTSEntity(TextToSpeechEntity):
     """The OpenAI TTS entity."""
+
     _attr_has_entity_name = True
     _attr_should_poll = False
 
@@ -38,7 +47,7 @@ class OpenAITTSEntity(TextToSpeechEntity):
         self.hass = hass
         self._engine = engine
         self._config = config
-        self._attr_unique_id = self._config.data[CONF_VOICE]
+        self._attr_unique_id = self._config.data[CONF_TTS_VOICE]
 
     @property
     def default_language(self):
@@ -52,7 +61,11 @@ class OpenAITTSEntity(TextToSpeechEntity):
 
     @property
     def device_info(self):
-        return {"identifiers": {(DOMAIN, self._attr_unique_id)}, "name": f"OpenAI {self._config.data[CONF_VOICE]}", "manufacturer": "OpenAI"}
+        return {
+            "identifiers": {(DOMAIN, self._attr_unique_id)},
+            "name": f"OpenAI {self._config.data[CONF_TTS_VOICE]}",
+            "manufacturer": "OpenAI",
+        }
 
     @property
     def name(self):

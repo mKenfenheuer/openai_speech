@@ -32,6 +32,7 @@ async def async_setup_entry(
         config_entry.data[CONF_TTS_VOICE],
         config_entry.data[CONF_TTS_MODEL],
         config_entry.data[CONF_TTS_SPEED],
+        config_entry.data[CONF_BASE_URL],
     )
     async_add_entities([OpenAITTSEntity(hass, config_entry, engine)])
 
@@ -83,10 +84,11 @@ class OpenAITTSEntity(TextToSpeechEntity):
 
             # The response should contain the audio file content
             return "mp3", speech.content
-        except Exception as e:
-            _LOGGER.error("Unknown Error: %s", e)
 
         except MaxLengthExceeded:
             _LOGGER.error("Maximum length of the message exceeded")
+
+        except Exception as e:
+            _LOGGER.error("Unknown Error: %s", e)
 
         return None, None

@@ -4,12 +4,12 @@ from .const import URL
 
 
 class OpenAITTSEngine:
-    def __init__(self, api_key: str, voice: str, model: str, speed: int):
+    def __init__(self, api_key: str, voice: str, model: str, speed: int, url: str):
         self._api_key = api_key
         self._voice = voice
         self._model = model
         self._speed = speed
-        self._url = URL
+        self._url = url
 
     def get_tts(self, text: str):
         """Makes request to OpenAI TTS engine to convert text into audio"""
